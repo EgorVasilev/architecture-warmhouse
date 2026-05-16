@@ -1,0 +1,49 @@
+get:
+  tags: [Здание]
+  summary: Получить данные по ID
+  security: []
+  parameters:
+    - $ref: '../components/parameters/facility_id_param.yaml'
+  responses:
+    '200':
+      description: Данные о здании
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/facility.yaml'
+    '404':
+      $ref: '../components/responses/not_found_error.yaml'
+
+put:
+  tags: [Здание]
+  summary: Обновить данные о здании
+  parameters:
+    - $ref: '../components/parameters/facility_id_param.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/facility_update.yaml'
+  responses:
+    '200':
+      description: Данные обновлены
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/facility.yaml'
+    '404':
+      $ref: '../components/responses/not_found_error.yaml'
+    '403':
+      description: Нет прав на редактирование
+
+delete:
+  tags: [Здание]
+  summary: Удалить данные о здании
+  parameters:
+    - $ref: '../components/parameters/facility_id_param.yaml'
+  responses:
+    '204':
+      description: Данные удалены
+    '404':
+      $ref: '../components/responses/not_found_error.yaml' 

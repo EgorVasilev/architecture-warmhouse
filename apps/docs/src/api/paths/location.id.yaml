@@ -1,0 +1,50 @@
+get:
+  tags: [Помещение]
+  summary: Получить данные по ID
+  security: []
+  parameters:
+    - $ref: '../components/parameters/facility_id_param.yaml'
+    - $ref: '../components/parameters/location_id_param.yaml'
+  responses:
+    '200':
+      description: Данные о помещении
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/location.yaml'
+    '404':
+      $ref: '../components/responses/not_found_error.yaml'
+
+put:
+  tags: [Помещение]
+  summary: Обновить данные
+  parameters:
+    - $ref: '../components/parameters/facility_id_param.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/facility_update.yaml'
+  responses:
+    '200':
+      description: Данные обновлены
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/facility.yaml'
+    '404':
+      $ref: '../components/responses/not_found_error.yaml'
+    '403':
+      description: Нет прав на редактирование
+
+delete:
+  tags: [Помещение]
+  summary: Удалить помещение из здания
+  parameters:
+    - $ref: '../components/parameters/facility_id_param.yaml'
+  responses:
+    '204':
+      description: Данные удалены
+    '404':
+      $ref: '../components/responses/not_found_error.yaml' 

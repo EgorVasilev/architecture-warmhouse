@@ -1,0 +1,89 @@
+@startuml
+title Smart Home Containers Diagram
+
+top to bottom direction
+
+!include <C4/C4_Container>
+
+AddElementTag("microService", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service\neight sided")
+
+
+Person(user, "User", "A user of the smart home ecosystem")
+Person(manufacturer, "Devices Manufacturer", "A third-party developer that creates new devices")
+
+System_Ext(payments_external, "Payment System", "Processes payment plans")
+System_Ext(sensors, "Sensors", "Termometers, Detectors, Cameras etc")
+System_Ext(devices, "Devices", "Heater, Gates, Doors, Lights etc")
+
+
+System_Boundary(smart_home_system, "Smart Home"){
+    Container(web_app, "Web Application", "Go, TypeScrypt")
+
+
+    Boundary(core, "System Core") {
+        Boundary(facility_ms, "") {
+            Container(facility, "Facility", "Go, TypeScrypt", "Describe a controlled Facility: Householders(Users), its property, location access rules", $tags = "microService")
+            ContainerDb(facility_data, "Store", "Postgress",)
+
+            Rel(facility, facility_data, "Stores data", "SQL")
+        }
+
+        Boundary(privacy_and_legal_ms, "") {
+            Container(privacy_and_legal, "PrivacyPolicy/Legal Regulations", "Go, TypeScrypt", "Contains privacy politics (custom and legals) and local legal restrictions", $tags = "microService")
+            ContainerDb(privacy_and_legal_data, "Store", "Postgress",)
+
+            Rel(privacy_and_legal, privacy_and_legal_data, "Stores data", "SQL")
+        }
+
+        Boundary(telemetry_ms, "") {
+            Container(telemetry, "Telemetry", "Go, TypeScrypt", "Aggregates Sensosr, Devices and Custom programs", $tags = "microService")
+            ContainerDb(telemetry_data, "Store", "Postgress",)
+
+            Rel(telemetry, telemetry_data, "Stores data", "SQL")
+        }
+
+        Boundary(custom_programs_ms, "") {
+            Container(custom_programs, "Custom Programs", "Go, TypeScrypt", "User defined scenarios", $tags = "microService")
+            ContainerDb(custom_programs_data, "Store", "Postgress",)
+
+            Rel(custom_programs, custom_programs_data, "Stores programs as JSON", "SQL")
+        }
+
+        Boundary(device_manager_ms, "") {
+            Container(device_manager, "Device Manager", "Go, TypeScrypt", "Add/Remove devices\nLogical/Phys interfaces\nEvents mapping/schemas", $tags = "microService")
+            ContainerDb(device_manager_data, "Store", "Postgress",)
+
+            Rel(device_manager, device_manager_data, "Stores data", "SQL")
+        }
+
+        Boundary(payments_internal_ms, "") {
+            Container(payments_internal, "Payments", "TypeScrypt", "Provides Payments interface and implements adapters", $tags = "microService")
+            ContainerDb(payments_internal_data, "Store", "Postgress",)
+
+            Rel(payments_internal, payments_internal_data, "Stores payment receipts", "SQL")
+        }
+
+        Rel(facility, privacy_and_legal, "Defines privacy policies\nand legal confirmations\nfor telemetry processes", "HTTPS")
+        Rel(facility, telemetry, "Send Tasks", "HTTPS")
+        Rel(facility, device_manager, "Checks connected devices and its statuses", "HTTPS")
+        Rel(facility, payments_internal, "Grants access to paid features for householders", "HTTPS")
+
+        Rel(custom_programs, telemetry, "Checks connected devices and its statuses", "HTTPS")
+
+        Rel(telemetry, device_manager, "Executes Tasks: polls sensors, turns devices on/off", "HTTPS")
+
+        Rel(payments_internal, payments_external, "Establishes payment process with banking services", "HTTPS")
+
+        Rel(device_manager, sensors, "Polls sensors state", "HTTPS, MQTT")
+        Rel(device_manager, devices, "Sends a command for physical execution", "HTTPS, MQTT")
+    }
+}
+
+Rel(user, web_app, "Connects smart devices and controls them remotely", "Web Browser")
+Rel(web_app, core, "Provides UI via microfrontends and HTTP requests", "HTML, CSS, JS")
+
+Rel(manufacturer, device_manager, "Reads documentation", "OpenAPI")
+Rel(manufacturer, device_manager, "Reads/Requests device interfaces", "JSON")
+
+
+@enduml

@@ -1,0 +1,23 @@
+type: object
+required: [condition]
+properties:
+  condition:
+     $ref: './condition.yaml'
+     description: "Желаемые параметры состояния помещения"    
+  locations:
+    description: "список ID желаемых помещений"
+    nullable: true
+    type: array
+    items: 
+      type: string
+  devices:
+    description: "список ID устройств осуществляющих изменение параметров (condition)"
+    type: array
+    items: 
+      type: string
+example:
+  condition: 
+    id: "4069df3d-ee9b-4be6-8b19-8a6e6a15811с"
+    value: "23.1"
+  locations: ["8069df3d-ee9b-4be6-8b19-8a6e6a15811x"]  
+  devices: ["5039df3d-ae9b-4be6-8b19-8a6e6a15811q"]

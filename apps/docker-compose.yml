@@ -4,10 +4,33 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: smarthome-postgres
-  ## тут нужно добавить настройки
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - smarthome-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./smart_home/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+      
 
   temperature-api:
-  ## тут нужно добавить приложение
+    build:
+      context: ./temperature_api
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    networks:
+      - smarthome-network
 
   app:
     build:
@@ -27,6 +50,27 @@ services:
     restart: unless-stopped
     networks:
       - smarthome-network
+
+  docs:
+    build:
+      context: ./docs
+      dockerfile: Dockerfile
+    container_name: smarthome-docs
+    ports:
+      - "9000:8000"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./docs
+  
+  swagger:
+    image: swaggerapi/swagger-ui:v5.32.5
+    environment:
+      SWAGGER_JSON: /spec/src/api/openapi.yml
+    ports:
+      - "${SWAGGER_PORT:-9001}:8080"
+    volumes:
+      - ./docs:/spec:ro
 
 volumes:
   postgres_data:

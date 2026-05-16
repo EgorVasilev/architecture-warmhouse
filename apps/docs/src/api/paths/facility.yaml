@@ -1,0 +1,44 @@
+get:
+  tags: [Здание]
+  summary: Получить список зданий, принадлежащих пользователю
+  security:
+    - BearerAuth: []
+  parameters:
+  responses:
+    '200':
+      description: Список зданий
+      headers:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/facility_list.yaml'
+
+post:
+  tags: [Здание]
+  summary: Создать новое здание
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/facility_create.yaml'
+        example:
+          name: "Дача"
+          description: "Дачный дом для летнего сезона"
+          address: 
+            zip: "100000"
+            street: "ул. Дачная"
+            building: "1А"
+            city: "Город"
+            country: "RU"
+  responses:
+    '201':
+      description: Здание создано
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/facility.yaml'
+    '400':
+      $ref: '../components/responses/validation_error.yaml'
+    '401':
+      $ref: '../components/responses/unauthorized_error.yaml' 

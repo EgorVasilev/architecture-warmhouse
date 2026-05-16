@@ -1,0 +1,66 @@
+@startuml
+title Device Class
+
+class Device {
+    id
+    type
+    status
+    location
+    name
+    createdBy
+    updatedAt
+    eventTypes
+
+    pollState()
+    dispatchEvent(event: Event)
+
+    addLogicalInterface(interfaceId)
+    addPhysicalInterface(interfaceId)
+
+    removeLogicalInterface(interfaceId)
+    removePhysicalInterface(interfaceId)
+}
+
+interface LogicalInterface {
+  id
+  mappingId
+
+  getEventTypes()
+  dispatchEvent(event: DeviceEvent)
+}
+
+interface PhysicalInterface {
+  id
+  mappingId
+
+  dispatchEvent(event: DeviceEvent)
+}
+
+interface DeviceMessageBus {
+    dispatchEvent(event: DeviceEvent)
+    pollStatus()
+}
+
+class EventSchema {
+  id
+  name
+  description
+  properties
+}
+
+class DeviceEvent {
+    name
+    schemaId
+    payload
+}
+
+LogicalInterface <|-- Device 
+
+DeviceMessageBus <|-- PhysicalInterface
+DeviceMessageBus <|-- LogicalInterface
+
+PhysicalInterface "many" o-- "1"  LogicalInterface  : dispatches to all connected
+
+EventSchema <|-- DeviceEvent
+
+@enduml

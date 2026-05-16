@@ -1,5 +1,11 @@
 -- Create the database if it doesn't exist
-CREATE DATABASE smarthome;
+DO $$
+BEGIN
+   IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'smarthome') THEN
+      PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE smarthome');
+   END IF;
+END
+$$;
 
 -- Connect to the database
 \c smarthome;

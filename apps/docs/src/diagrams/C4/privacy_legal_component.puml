@@ -1,0 +1,35 @@
+@startuml
+title Smart Home: Privacy Policy & Legal Component
+
+top to bottom direction
+
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Container(web_app, "Web Application", "Go, TypeScrypt")
+
+Container_Boundary(privacy_legal_container, "Privacy Policy & Legal"){
+    Component(frontend, "Frontend Components", "Microfrontend, TypeScript", "UI entrypoints")
+    Component(rest, "REST API", "Go", "REST API entrypoints")
+
+    Component(privacy, "Privaci Policy", "Go", "Defines privacy level of a telemetry action: public, internal, confidential")
+    Component(terms, "Terms & Conditions", "Go", "Ensures compliance with local laws and agreements e.g. GDPR, sensitive data processing etc")
+
+    Component(repository, "Privacy Policy & Legal data access", "Go", "Repository pattern")
+    ComponentDb(data, "Data store", "Postgres", "Facility store")
+}
+
+
+Rel(web_app, frontend, "Fetches UI components to render", "HTTPS, HTML/CSS/JS")
+Rel(frontend, rest, "Fetches a data to render", "HTTPS, JSON")
+Rel(web_app, rest, "Fetches a data to render", "HTTPS, JSON")
+
+Rel(rest, privacy, "Uses")
+Rel(rest, terms, "Uses")
+
+Rel(privacy, repository, "Stores data")
+Rel(terms, repository, "Stores data")
+
+Rel(repository, data, "Stores data", "SQL")
+
+@enduml

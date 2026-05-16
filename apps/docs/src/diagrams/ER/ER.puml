@@ -1,0 +1,162 @@
+@startuml
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "Facility" as facility {
+  *id : text <<generated>>
+  --
+  *name : text
+  description : text
+  address : text
+}
+
+entity "Location" as location {
+  *id : text <<generated>>
+  --
+  *facility_id <<FK>>
+  *name : text
+  description : text
+  conditions : array
+}
+
+
+entity "Condition" as condition {
+  *id : text <<generated>>
+  --
+  *location_id <<FK>>
+  *name : text
+  *value : text
+  description : text
+  unit : text
+}
+
+note top of condition : Variable conditions e.g.\ntemperature or humidity.
+
+entity "Householder" as householder {
+  *id : text <<generated>>
+  --
+  *name : text
+  *email : text
+}
+
+entity "Payment" as payment {
+  *id : text <<generated>>
+  --
+  *customer_id : text <<FK>>
+  *name : text
+  *plan : text
+  *createdAt : text
+  *paid_until : text
+  description : text
+}
+
+entity "Legal Agreement" as legal_agreement {
+  *id : text <<generated>>
+  --
+  *householder_id : text <<FK>>
+  *name : text
+  *signed_at : text
+  description : text
+}
+
+entity "TelemetryJob" as job {
+  *id : number <<generated>>
+  --
+  created_at : text
+}
+
+entity "Task" as task {
+  *id : number <<generated>>
+  --
+  job_id : number <<FK>>
+  created_at : text
+}
+
+entity "Custom Program" as custom_program {
+  *id : text <<generated>>
+  --
+  program : text
+  created_at : text
+  created_ by
+}
+
+entity "Device" as device {
+  *id : text <<generated>>
+  --
+  *location_id : text <<FK>>
+  *name : text
+  *type : text
+  *status : text
+  created_by : text
+  updated_at : text
+  event_types : text
+}
+
+entity "Logical Interface" as device_logical_interface {
+  *id : text <<generated>>
+  --
+  *device_type : text <<FK>>
+  *name : text
+  version : text
+  updated_at : text
+  updadet_by : text
+}
+
+entity "Physical Interface" as device_physical_interface {
+  *id : text <<generated>>
+  --
+  *device_type : text <<FK>>
+  *name : text
+  version : text
+  updated_at : text
+  updadet_by : text
+}
+
+entity "Event" as device_event {
+  *id : text <<generated>>
+  --
+  *name : text
+  *scheme_id : text <<FK>>
+  version : varchar
+  updated_at : text
+  updadet_by : text
+}
+
+entity "Event Scheme" as device_event_scheme {
+  *id : text <<generated>>
+  --
+  *properties : text
+  updated_at : text
+  updadet_by : text
+}
+
+
+entity "Inbound Event Mapping" as inbound_event_mapping {
+  *id : text <<generated>>
+  --
+  *logical_interface_id : text <<FK>>
+  *property_mappings : text
+  updated_at : text
+  updadet_by : text
+}
+
+facility ||--o{ householder
+facility ||--|{ location
+location ||--o{ device
+location ||--o{ condition
+householder ||--o{ payment
+householder ||--o{ legal_agreement
+
+job ||--o{ task
+job ||--{ condition
+job ||--{ device
+
+device }|--o| device_logical_interface
+device }|--|{ device_physical_interface
+device }|--|{ device_event
+
+device_event ||--|| device_event_scheme
+device_logical_interface ||--o{ inbound_event_mapping
+
+@enduml

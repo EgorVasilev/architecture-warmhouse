@@ -1,0 +1,49 @@
+get:
+  tags: [Телеметрия]
+  summary: Получить данные по ID
+  security: []
+  parameters:
+    - $ref: '../components/parameters/telemetry_job_id_param.yaml'
+  responses:
+    '200':
+      description: Данные об активном задании
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/telemetry_job.yaml'
+    '404':
+      $ref: '../components/responses/not_found_error.yaml'
+
+put:
+  tags: [Телеметрия]
+  summary: Обновить детали задания
+  parameters:
+    - $ref: '../components/parameters/telemetry_job_id_param.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/telemetry_job_update.yaml'
+  responses:
+    '200':
+      description: Задания обновлено
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/telemetry_job.yaml'
+    '404':
+      $ref: '../components/responses/not_found_error.yaml'
+    '403':
+      description: Нет прав на редактирование
+
+delete:
+  tags: [Телеметрия]
+  summary: Отменить выполнение задания
+  parameters:
+    - $ref: '../components/parameters/telemetry_job_id_param.yaml'
+  responses:
+    '204':
+      description: Задание отменено
+    '404':
+      $ref: '../components/responses/not_found_error.yaml' 

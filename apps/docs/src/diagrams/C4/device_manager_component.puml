@@ -1,0 +1,50 @@
+@startuml
+title Smart Home: Device Manager Component
+
+top to bottom direction
+
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+System_Ext(sensors, "Sensors", "Termometers, Detectors, Cameras etc")
+System_Ext(devices, "Devices", "Heater, Gates, Doors, Lights etc")
+
+Container(web_app, "Web Application", "Go, TypeScrypt")
+
+Container_Boundary(device_manager_container, "Device Manager"){
+    Component(frontend, "Frontend Components", "Microfrontend, TypeScript", "UI entrypoints")
+    Component(rest, "REST API", "TypeScript", "REST API entrypoints")
+
+    Component(device, "Device", "TypeScript", "Provides device handlers to command, healthcheck etc")
+    Component(logical_interfaces, "Logical Interfaces", "TypeScript, JSON", "Sets up device interface that are suitable for the Smart Home ecosystem")
+    Component(physical_interfaces, "Physical Interfaces", "TypeScript, JSON", "Sets up device interfaces that are suitable to communicate with (gateway to a physical device)")
+    Component(schemas, "Schemas/Mappings", "TypeScript, JSON", "Collection of schemas those represent communication rules: event payload schemas etc")
+    
+    Component(repository, "Data access", "TypeScript", "Repository pattern")
+    ComponentDb(data, "Data store", "Postgres", "Devices store")
+}
+
+Rel(web_app, frontend, "Fetches UI components to render", "HTTPS, HTML/CSS/JS")
+Rel(frontend, rest, "Fetches a data to render", "HTTPS, JSON")
+Rel(web_app, rest, "Fetches a data to render", "HTTPS, JSON")
+
+Rel(rest, logical_interfaces, "Uses")
+Rel(rest, physical_interfaces, "Uses")
+Rel(rest, schemas, "Uses")
+Rel(rest, device, "Uses")
+
+Rel(device, logical_interfaces, "Includes logical interfaces to interact with Telemetry")
+Rel(device, physical_interfaces, "Includes physical interfaces to interact with a physical device device")
+Rel(device, schemas, "Needs a list of available events and its schemas to establish communication")
+
+
+Rel(logical_interfaces, repository, "Stores data")
+Rel(physical_interfaces, repository, "Stores data")
+Rel(schemas, repository, "Stores data")
+Rel(device, repository, "Stores and reads data")
+
+Rel(repository, data, "Stores data", "SQL")
+
+Rel(device, sensors, "Polls sensors state", "HTTPS, MQTT")
+Rel(device, devices, "Sends a command for physical execution", "HTTPS, MQTT")
+@enduml

@@ -1,0 +1,26 @@
+openapi: 3.2.1
+info:
+  title: API
+  version: 0.1.0
+paths:
+  /facility:
+    $ref: './paths/facility.yaml'
+  /facility/{facilityId}:
+    $ref: './paths/facility.id.yaml'
+
+  /facility/{facilityId}/location:
+    $ref: './paths/location.yaml'
+  
+  /facility/{facilityId}/location/{locationId}:
+    $ref: './paths/location.id.yaml'
+
+  /telemetry/job:
+    $ref: './paths/telemetry.yaml'
+
+  /telemetry/job/{jobId}:
+    $ref: './paths/telemetry.id.yaml'
+components:
+  schemas:
+    Facility:
+      $ref: './components/schemas/facility.yaml'
+                  
