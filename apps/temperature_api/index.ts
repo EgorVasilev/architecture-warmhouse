@@ -1,6 +1,6 @@
 import { RandomTemperatureSensorGatewayAdapter } from "./adapter/secondary/Temperature/TemperatureSensorGatewayAdapter.js";
 import { GetTemperatureUseCase } from "./core/Temperature/useCases/getTemperature.js";
-import http from 'node:http'
+
 
 import express, { type Request, type Response, type Application } from 'express';
 
@@ -51,34 +51,3 @@ app.get('/temperature', async (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-
-
-
-// const server = http.createServer(async (req, res) => {
-//   const url = new URL(req.url || '', `http://${req.headers.host}`);
-//   const queryParams = url.searchParams;
-
-//   switch (url.pathname) {
-//     case '/temperature':
-//       const temperatureQuery = new GetTemperatureUseCase(sensorGatewayAdapter);
-
-//       try {
-//         const temperature = await temperatureQuery.query(queryParams.get('location'), queryParams.get('sensorId'));
-
-//         res.writeHead(200, { 'Content-Type': 'application/json' });
-//         res.end(JSON.stringify({temperature: temperature.value}));
-//       } catch (error) {
-//         res.writeHead(500, { 'Content-Type': 'application/json' });
-//         res.end(JSON.stringify({error}));
-//       }
-
-//       break;
-//     default:
-//       res.writeHead(404, { 'Content-Type': 'text/plain' });
-//       res.end('404 Page Not Found');
-//   }
-// });
-
-// server.listen(8081, () => {
-//   console.log('Server running at http://localhost:8081/');
-// });

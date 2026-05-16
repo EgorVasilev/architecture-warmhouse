@@ -10,7 +10,6 @@ export class GetTemperatureUseCase implements GetTemperature {
         if (!sensorId) {
             let sensorIdByLocation;
 
-            console.log('location', location, location === "Kitchen")
             switch (location) {
 		        case "Living Room":
 			        sensorIdByLocation = "1"
