@@ -192,3 +192,10 @@ build/
 
 tmp/
 task-*
+
+
+### ENV ###
+**/.env
+
+### NODE MODULES
+node_modules/

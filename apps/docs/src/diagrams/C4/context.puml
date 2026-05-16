@@ -1,0 +1,23 @@
+@startuml
+title Smart Home Containers Diagram
+
+top to bottom direction
+
+!include <C4/C4_Container>
+
+Person(user, "User", "A user of the smart home ecosystem")
+Person(manufacturer, "Devices Manufacturer", "A third-party developer that creates new devices")
+System(SmartHomeEcosystem, "Smart Home Ecosystem", "Remote control of a facility infrastructure such as heating, door locks, surveillance etc. ")
+
+System_Ext(payments, "Payment System", "Processes payment plans")
+System_Ext(sensors, "Sensors", "Termometers, Detectors, Cameras etc")
+System_Ext(devices, "Devices", "Heater, Gates, Doors, Lights etc")
+
+Rel(user, SmartHomeEcosystem, "Connects smart devices and controls them remotely")
+Rel(manufacturer,SmartHomeEcosystem,"Consumes system requirements and protocols to create new smart devices")
+
+Rel(SmartHomeEcosystem,payments,"Processes payments")
+Rel(SmartHomeEcosystem,sensors,"Polls environment data: temperature, humidity, etc")
+Rel(SmartHomeEcosystem,devices,"Sends control commands")
+
+@enduml

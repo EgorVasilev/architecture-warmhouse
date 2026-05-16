@@ -1,0 +1,3 @@
+type: object
+$ref: './telemetry_job_create.yaml'
+required: []

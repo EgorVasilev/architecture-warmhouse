@@ -1,0 +1,37 @@
+@startuml
+title Smart Home: Custom Programs Component
+
+top to bottom direction
+
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Container(web_app, "Web Application", "Go, TypeScrypt")
+
+Container_Boundary(custom_programs_container, "Custom Programs"){
+    Component(frontend, "Frontend Components", "Microfrontend, TypeScript", "UI entrypoints")
+    Component(rest, "REST API", "TypeScript", "REST API entrypoints")
+    Component(program_interpreter, "Program Interpreter", "TypeScript", "Serialize end evals custom programs stored as JSON")
+    Component(repository, "Data access", "TypeScript", "Repository pattern")
+    ComponentDb(data, "Data store", "Postgres", "Store")
+    Component(telemetry_gateway, "Telemetry Gateway", "Go", "Abstract connector to Telemetry service")
+}
+
+Container_Boundary(telemetry_container, "Telemetry"){
+    Component(telemetry_rest, "REST API", "Go", "REST API entrypoints")
+}
+
+Rel(web_app, frontend, "Fetches UI components to render", "HTTPS, HTML/CSS/JS")
+Rel(frontend, rest, "Fetches a data to render", "HTTPS, JSON")
+Rel(web_app, rest, "Fetches a data to render", "HTTPS, JSON")
+
+Rel(rest, program_interpreter, "Uses")
+
+Rel(program_interpreter, repository, "Stores and reads data")
+
+Rel(repository, data, "Stores data", "SQL")
+
+Rel(program_interpreter, telemetry_gateway, "Sends evaluated Job or Task")
+Rel(telemetry_gateway, telemetry_rest, "Does CRUD")
+
+@enduml

@@ -1,0 +1,22 @@
+type: object
+required: [id, name]
+properties:
+  id:
+    type: string
+    readOnly: true
+    example: "4069df3d-ee9b-4be6-8b19-8a6e6a15811b"
+  name:
+    type: string
+    maxLength: 200
+    example: "temperature"
+  value:
+    type: string
+    example: "23.1"
+  description:
+    type: string
+    maxLength: 200
+    example: "Темература в градусах Цельсия"
+  unit:
+    type: string
+    maxLength: 200
+    example: "celsius"

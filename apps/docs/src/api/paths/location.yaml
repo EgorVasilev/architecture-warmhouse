@@ -1,0 +1,51 @@
+get:
+  tags: [Помещение]
+  summary: Получить список помещений в здании
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: facilityId
+      in: path
+      description: ID здания
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Список зданий
+      headers:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/location_list.yaml'
+
+post:
+  tags: [Помещение]
+  summary: Обозначить помещение в здании
+  parameters:
+    - name: facilityId
+      in: path
+      description: ID здания
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/location_create.yaml'
+        example:
+          name: "Кухня"
+          description: "Кухня в дачном доме"
+  responses:
+    '201':
+      description: Помещение создано в указанном здании
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/location.yaml'
+    '400':
+      $ref: '../components/responses/validation_error.yaml'
+    '401':
+      $ref: '../components/responses/unauthorized_error.yaml' 

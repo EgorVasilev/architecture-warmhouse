@@ -1,0 +1,61 @@
+@startuml
+title Smart Home: Facility Component
+
+top to bottom direction
+
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Container(web_app, "Web Application", "Go, TypeScrypt")
+
+Container_Boundary(facility_container, "Facility"){
+    Component(frontend, "Frontend Components", "Microfrontend, TypeScript", "UI entrypoints")
+    Component(rest, "REST API", "Go", "REST API entrypoints")
+
+    Component(auth, "Auth", "Go", "Provides authentication")
+    Component(users, "Users/Householders", "Go", "Manages users of the facility")
+    Component(locations, "Locations", "Go", "Describes areas or locations of the facility:\ndevices it contains and env. conditions e.g. temperature")
+
+    Component(repository, "Facility Data Access", "Go", "Repository pattern")
+    ComponentDb(data, "Data store", "Postgres", "Facility store")
+
+    Component(telemetry_gateway, "Telemetry Gateway", "Go", "Abstract connector to Telemetry service")
+    Component(privacy_legal_gateway, "Privacy Policy & Legal Gateway", "Go", "Abstract connector to Privacy Policy & Legal service")
+    Component(payments_gateway, "Payments Gateway", "Go", "Abstract connector to Payments service")
+}
+
+Container_Boundary(telemetry_container, "Telemetry"){
+    Component(telemetry_rest, "REST API", "Go", "REST API entrypoints")
+}
+
+Container_Boundary(privacy_legal_container, "Privacy Policy & Legal"){
+    Component(privacy_legal_rest, "REST API", "Go", "REST API entrypoints")
+}
+
+Container_Boundary(payments_container, "Payments"){
+    Component(payments_rest, "REST API", "Go", "REST API entrypoints")
+}
+
+Rel(web_app, frontend, "Fetches UI components to render", "HTTPS, HTML/CSS/JS")
+Rel(frontend, rest, "Fetches a data to render", "HTTPS, JSON")
+Rel(web_app, rest, "Fetches a data to render", "HTTPS, JSON")
+
+Rel(rest, auth, "Uses")
+Rel(rest, users, "Uses")
+Rel(rest, locations, "Uses")
+
+Rel(auth, repository, "Stores data")
+Rel(users, repository, "Stores data")
+Rel(locations, repository, "Stores data")
+
+Rel(repository, data, "Stores data", "SQL")
+
+Rel(locations, telemetry_gateway, "Sends commands to execute e.g. set temperature, turn on a device etc.")
+Rel(telemetry_gateway, telemetry_rest, "Does CRUD", "HTTPS")
+
+Rel(users, privacy_legal_gateway, "Defines privacy politics, signs terms and conditions etc")
+Rel(privacy_legal_gateway, privacy_legal_rest, "Does CRUD", "HTTPS")
+
+Rel(users, payments_gateway, "Defines a billing status")
+Rel(payments_gateway, payments_rest, "Does CRUD", "HTTPS")
+@enduml

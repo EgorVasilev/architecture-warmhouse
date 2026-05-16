@@ -1,0 +1,35 @@
+type: object
+required: [name]
+properties:
+  name:
+    type: string
+    minLength: 1
+    maxLength: 200
+  description:
+    type: string
+    minLength: 1
+  address:
+    type: object
+    properties: 
+      zip:
+        type: string
+      street:
+        type: string
+      building:
+        type: string
+      city:
+        type: string
+      country: 
+        type: string
+        minLength: 2
+        maxLength: 2
+    description: "ISO 20022"
+example:
+  name: "Дача"
+  description: "Дачный дом для летнего сезона"
+  address: 
+    zip: "100000"
+    street: "ул. Дачная"
+    building: "1А"
+    city: "Город"
+    country: "RU"

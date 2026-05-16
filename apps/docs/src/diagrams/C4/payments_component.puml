@@ -1,0 +1,32 @@
+@startuml
+title Smart Home: PaymentsComponent
+
+top to bottom direction
+
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+System_Ext(payments_external, "Payment System", "Processes payment plans")
+
+Container(web_app, "Web Application", "Go, TypeScrypt")
+
+Container_Boundary(payments_container, "Payments"){
+    Component(frontend, "Frontend Components", "Microfrontend, TypeScript", "UI entrypoints")
+    Component(rest, "REST API", "TypeScript", "REST API entrypoints")
+    Component(billing, "Billing", "TypeScript", "Provides payments plans")
+    Component(repository, "Data access", "TypeScript", "Repository pattern")
+    ComponentDb(data, "Data store", "Postgres", "Store")
+}
+
+Rel(web_app, frontend, "Fetches UI components to render", "HTTPS, HTML/CSS/JS")
+Rel(frontend, rest, "Fetches a data to render", "HTTPS, JSON")
+Rel(web_app, rest, "Fetches a data to render", "HTTPS, JSON")
+
+Rel(rest, billing, "Uses")
+
+Rel(billing, repository, "Stores and reads data")
+
+Rel(repository, data, "Stores data", "SQL")
+
+Rel(billing, payments_external, "Executes payment operations")
+@enduml

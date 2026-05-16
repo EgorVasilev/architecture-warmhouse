@@ -1,0 +1,12 @@
+site_name: Smart Home
+docs_dir: src
+
+nav:
+  - Home: index.md
+  - 'C4 Diagrams': diagrams/C4/
+  - 'ER Diagram': diagrams/ER/
+
+plugins:
+    - puml-file
+    - plantuml:
+        puml_url: https://www.plantuml.com/plantuml/

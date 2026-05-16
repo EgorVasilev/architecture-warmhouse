@@ -1,0 +1,41 @@
+get:
+  tags: [Телеметрия]
+  summary: Получить список активных заданий
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: locationId
+      in: query
+      description: ID помещения
+      required: false
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Список активных заданий
+      headers:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/telemetry_job_list.yaml'
+
+post:
+  tags: [Телеметрия]
+  summary: Создать задание для телеметрии
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/telemetry_job_create.yaml'
+  responses:
+    '201':
+      description: Задание создано
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/location.yaml'
+    '400':
+      $ref: '../components/responses/validation_error.yaml'
+    '401':
+      $ref: '../components/responses/unauthorized_error.yaml' 

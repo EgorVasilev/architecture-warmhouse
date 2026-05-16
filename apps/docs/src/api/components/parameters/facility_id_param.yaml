@@ -1,0 +1,8 @@
+name: facilityId
+in: path
+required: true
+description: ID здания
+schema:
+  type: string
+  minLength: 1
+example: "4069df3d-ee9b-4be6-8b19-8a6e6a15811b"

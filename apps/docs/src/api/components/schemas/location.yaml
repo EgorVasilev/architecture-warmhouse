@@ -1,0 +1,17 @@
+type: object
+required: [id, name]
+properties:
+  id:
+    type: string
+    readOnly: true
+    example: "4069df3d-ee9b-4be6-8b19-8a6e6a15811b"
+  name:
+    type: string
+    maxLength: 200
+  description:
+    type: string
+    maxLength: 200
+  conditions:
+    type: array
+    items:
+      $ref: './condition.yaml'

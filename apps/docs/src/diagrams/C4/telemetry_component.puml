@@ -1,0 +1,45 @@
+@startuml
+title Smart Home: Telemetry Component
+
+top to bottom direction
+
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Container(web_app, "Web Application", "Go, TypeScrypt")
+
+Container_Boundary(telemetry_container, "Telemetry"){
+    Component(frontend, "Frontend Components", "Microfrontend, TypeScript", "UI entrypoints")
+    Component(rest, "REST API", "Go", "REST API entrypoints")
+
+    Component(jobs_manager, "Jobs Manager", "Go", "Handles long-term cancelable processes like keeping a temperature level and may includes a list of Tasks")
+    Component(tasks_manager, "Tasks Manager", "Go", "Handles exact commands like turn on a device")
+    Component(repository, "Telemetry data access", "Go", "Repository pattern")
+    ComponentDb(data, "Data store", "Postgres", "Telemetry store: keeps jobs IDs to cancel")
+
+    Component(device_manager_gateway, "Device Manager gateway", "Go", "Abstract connector to Device Manager service")
+}
+
+Container_Boundary(device_manager_container, "Device Manager"){
+    Component(device_manager_rest, "REST API", "Go", "REST API entrypoints")
+}
+
+
+Rel(web_app, frontend, "Fetches UI components to render", "HTTPS, HTML/CSS/JS")
+Rel(frontend, rest, "Fetches a data to render", "HTTPS, JSON")
+Rel(web_app, rest, "Fetches a data to render", "HTTPS, JSON")
+
+Rel(jobs_manager, tasks_manager, "Executes every step or iteration as a Task")
+
+Rel(rest, jobs_manager, "Uses")
+Rel(rest, tasks_manager, "Uses")
+
+Rel(jobs_manager, repository, "Stores data")
+Rel(tasks_manager, repository, "Stores data")
+
+Rel(repository, data, "Stores data", "SQL")
+
+Rel(tasks_manager, device_manager_gateway, "Sends commands to execute e.g. set temperature, turn on a device etc.")
+Rel(device_manager_gateway, device_manager_rest, "Does CRUD", "HTTPS")
+
+@enduml
